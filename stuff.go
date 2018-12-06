@@ -1,13 +1,25 @@
 package md5
 
-func stuff(clear_text string) []byte {
-	length := len(clear_text)
-	if len(clear_text)%128 != 112 {
-		clear_text += "90"
+import(
+	"fmt"
+)
+
+func stuff(clear_text string) string {
+	clear_text_bin := binText(clear_text)
+	length := int64(len(clear_text_bin))
+	fmt.Println("length: ", length)
+	if len(clear_text_bin)%512 != 448 {
+		clear_text_bin += "1"
 	}
-	for len(clear_text)%128 != 112 {
-		clear_text += "00"
+	for len(clear_text_bin)%512 != 448 {
+		clear_text_bin += "0"
 	}
-	clear_text += int64(length)
-	return clear_text
+	lenStr := ""
+	for i:=0; i<64; i++ {
+		lenStr = string((length & 1) + '0') + lenStr
+		length = length >> 1
+	}
+	clear_text_bin +=  lenStr
+	fmt.Println("clear_text_bin: ", clear_text_bin)
+	return clear_text_bin
 }

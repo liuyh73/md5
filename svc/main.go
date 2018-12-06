@@ -1,9 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/liuyh73/md5"
 )
 
 func main() {
-	md5.Encrypt("1243")
+	fmt.Println(md5.Encrypt("message digest"))
 }
