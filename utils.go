@@ -1,5 +1,7 @@
 package md5
 
+import "fmt"
+
 func hexadecimalToBinary(data byte) string {
 	switch data {
 	case '0':
@@ -46,13 +48,28 @@ func binText(text string) string {
 	return binText
 }
 
-func bin2dec(binstr string) uint {
-	num := uint(0);
-	for i:=0;i<32;i++ {
-		num = num << 1
-		num += uint(binstr[i] - '0')
+// 小端，低位在低字节
+func bin2dec(binstr string) uint32 {
+	num := make([]uint32, 4)
+	for i := 0; i < 32; i++ {
+		num[i/8] = num[i/8] << 1
+		num[i/8] += uint32(binstr[i] - '0')
 	}
-	return num
+	n := num[3]
+	for i := 2; i >= 0; i-- {
+		n = n << 8
+		n += num[i]
+	}
+	return n
+}
+
+// 小端，低位在低字节
+func dec2hex(num uint32) string {
+	buf := make([]byte, 4)
+	for i := 0; i < 4; i++ {
+		buf[i] = byte(num >> uint(8*i))
+	}
+	return fmt.Sprintf("%x", buf)
 }
 
 // func hex2bin(str string) []byte {
